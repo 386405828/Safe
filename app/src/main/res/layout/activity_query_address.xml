@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <include layout="@layout/common_title_include"/>
+
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:paddingLeft="15dp"
+        android:background="@null"
+        android:textCursorDrawable="@drawable/color_cursor"
+        android:hint="请输入电话号码"
+        android:inputType="phone"/>
+    <View
+        style="@style/HorizontalLine"/>
+    <Button
+        android:id="@+id/bt_query"
+        android:background="@color/gray"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询">
+    </Button>
+
+    <TextView
+        android:id="@+id/tv_query_result"
+        android:padding="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <include layout="@layout/common_title_include"/>
+
+    <com.simon.safe.view.SettingItemView
+        android:id="@+id/siv_update"
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.simon.safe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:desoff="自动更新已关闭"
+        mobilesafe:deson="自动更新已开启"
+        mobilesafe:destitle="自动更新设置">
+    </com.simon.safe.view.SettingItemView>
+
+    <com.simon.safe.view.SettingItemView
+        android:id="@+id/siv_rocket"
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.simon.safe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:desoff="小火箭的显示已关闭"
+        mobilesafe:deson="小火箭的显示已开启"
+        mobilesafe:destitle="加速小火箭的显示设置">
+    </com.simon.safe.view.SettingItemView>
+
+    <com.simon.safe.view.SettingItemView
+        android:id="@+id/siv_address"
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.simon.safe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:desoff="归属地的显示已关闭"
+        mobilesafe:deson="归属地的显示已开启"
+        mobilesafe:destitle="电话归属地的显示设置">
+    </com.simon.safe.view.SettingItemView>
+
+    <com.simon.safe.view.SettingClickView
+        android:id="@+id/scv_toast_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.simon.safe.view.SettingClickView>
+
+    <com.simon.safe.view.SettingClickView
+        android:id="@+id/scv_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.simon.safe.view.SettingClickView>
+    <com.simon.safe.view.SettingItemView
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.simon.safe"
+        android:id="@+id/siv_blacknumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="黑名单拦截设置"
+        mobilesafe:desoff="黑名单拦截已关闭"
+        mobilesafe:deson="黑名单拦截已开启">
+    </com.simon.safe.view.SettingItemView>
+</LinearLayout>

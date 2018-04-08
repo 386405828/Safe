@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:background="@color/white"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <!-- 将对应属性抽取到样式中去 -->
+
+    <TextView
+        style="@style/TitleStyle"
+        android:text="功能列表"/>
+
+    <com.simon.safe.view.FocusTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="5dp"
+        android:singleLine="true"
+        android:text="@string/describe_function"
+        android:textColor="#000">
+    </com.simon.safe.view.FocusTextView>
+
+    <!--android:numColumns指定列数  -->
+    <!-- android:verticalSpacing="10dp"指定内部条目竖直方向间距为10dp -->
+    <GridView
+        android:id="@+id/gv_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"
+        android:verticalSpacing="10dp">
+    </GridView>
+
+</LinearLayout>
