@@ -11,7 +11,7 @@ public class AToolActivity extends BaseActivity implements View.OnClickListener 
 
     /** 归属地查询 */
     private TextView mTvQueryPhoneAddress;
-    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
