@@ -7,4 +7,14 @@
     <string name="sample_device_admin">超级管理员</string>
     <string name="sample_device_admin_description">一键激活，一键锁屏，一键清除数据，一键卸载</string>
     <string name="rationale_calls">如果正常使用此功能需要您授权去电监听权限</string>
+    <string name="message_permission_rationale">Grant the following permissions to continue the program:\n\n%1$s</string>
+    <string name="message_permission_always_failed">We need these permissions, please give us permission in the settings:\n\n%1$s</string>
+    <string name="setting">Setting</string>
+    <string name="resume">Resume</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="no">NO</string>
+    <string name="title_dialog">Tips</string>
+
+
 </resources>

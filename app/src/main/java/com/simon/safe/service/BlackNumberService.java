@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsMessage;
@@ -19,6 +22,7 @@ import java.lang.reflect.Method;
 public class BlackNumberService extends Service {
 
     private static final String TAG = "BlackNumberService";
+    private MyContentObserver mContentObserver;
 
     public BlackNumberService() {
     }
@@ -122,6 +126,29 @@ public class BlackNumberService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            //6,在内容解析器上,去注册内容观察者,通过内容观察者,观察数据库(Uri决定那张表那个库)的变化
+            mContentObserver = new MyContentObserver(new Handler(), phone);
+            getContentResolver().registerContentObserver(
+                    Uri.parse("content://call_log/calls"), true, mContentObserver);
+        }
+    }
+
+    class MyContentObserver extends ContentObserver {
+
+        private String phone;
+
+        public MyContentObserver(Handler handler, String phone) {
+            super(handler);
+            this.phone = phone;
+        }
+
+        //数据库中指定calls表发生改变的时候会去调用方法
+        @Override
+        public void onChange(boolean selfChange) {
+            //插入一条数据后,再进行删除
+            getContentResolver().delete(
+                    Uri.parse("content://call_log/calls"), "number = ?", new String[]{phone});
+            super.onChange(selfChange);
         }
     }
 
@@ -129,6 +156,15 @@ public class BlackNumberService extends Service {
     public void onDestroy() {
         if (mInnerSmsReceiver != null) {
             unregisterReceiver(mInnerSmsReceiver);
+        }
+        //注销内容观察者
+        if(mContentObserver!=null){
+            getContentResolver().unregisterContentObserver(mContentObserver);
+        }
+
+        //取消对电话状态的监听
+        if(mPhoneStateListener!=null){
+            mTM.listen(mPhoneStateListener,PhoneStateListener.LISTEN_NONE);
         }
         super.onDestroy();
     }

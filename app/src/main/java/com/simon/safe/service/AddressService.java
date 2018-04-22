@@ -28,6 +28,7 @@ public class AddressService extends Service {
     private InnerOutCallReceiver mInnerOutCallReceiver;
 
     public AddressService() {
+
     }
 
     public static final String tag = "AddressService";

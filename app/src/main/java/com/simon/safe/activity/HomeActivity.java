@@ -35,7 +35,6 @@ public class HomeActivity extends BaseActivity {
 //        IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
 //        filter.setPriority(Integer.MAX_VALUE);
 //        registerReceiver(receiver, filter);
-
         initView();
         initData();
         initEvent();
@@ -76,6 +75,26 @@ public class HomeActivity extends BaseActivity {
                     case 1:
                         //跳转到通信卫士模块
                         startActivity(new Intent(getApplicationContext(), BlackNumberActivity.class));
+                        break;
+                    case 2:
+                        //跳转到软件管理模块
+                        startActivity(new Intent(getApplicationContext(), AppManagerActivity.class));
+                        break;
+                    case 3:
+                        //跳转到通信卫士模块
+                        startActivity(new Intent(getApplicationContext(), ProcessManagerActivity.class));
+                        break;
+                    case 4:
+                        //跳转到通信卫士模块
+                        startActivity(new Intent(getApplicationContext(), TrafficActivity.class));
+                        break;
+                    case 5:
+                        //跳转到通信卫士模块
+                        startActivity(new Intent(getApplicationContext(), AnitVirusActivity.class));
+                        break;
+                    case 6:
+//					startActivity(new Intent(getApplicationContext(), CacheClearActivity.class));
+                        startActivity(new Intent(getApplicationContext(), BaseCacheClearActivity.class));
                         break;
                     case 7:
                         //跳转到高级工具功能列表界面

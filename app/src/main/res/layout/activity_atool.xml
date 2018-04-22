@@ -12,13 +12,69 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_atool_item_bg"
-        android:drawableLeft="@android:drawable/btn_star"
-        android:gravity="center_vertical"
+        android:drawableLeft="@drawable/icon_star"
         android:drawablePadding="10dp"
-        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:padding="15dp"
         android:text="归属地查询"
         android:textSize="18sp">
     </TextView>
+
+    <View
+        style="@style/HorizontalLine"/>
+
+    <TextView
+        android:id="@+id/tv_sms_backup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_atool_item_bg"
+        android:drawableLeft="@drawable/icon_star"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="短信备份"
+        android:textSize="18sp">
+    </TextView>
+
+    <View
+        style="@style/HorizontalLine"/>
+
+    <ProgressBar
+        android:id="@+id/pb_bar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_commonnumber_query"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_atool_item_bg"
+        android:drawableLeft="@drawable/icon_star"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="常用号码查询"
+        android:textSize="18sp">
+    </TextView>
+
+    <View
+        style="@style/HorizontalLine"/>
+
+    <TextView
+        android:id="@+id/tv_app_lock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_atool_item_bg"
+        android:drawableLeft="@drawable/icon_star"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:padding="15dp"
+        android:text="程序锁"
+        android:textSize="18sp">
+    </TextView>
+
     <View
         style="@style/HorizontalLine"/>
 </LinearLayout>

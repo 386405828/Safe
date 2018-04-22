@@ -1,29 +1,36 @@
 package com.simon.safe.activity;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.NonNull;
 import android.view.View;
-import android.widget.Toast;
 
 import com.simon.safe.R;
+import com.simon.safe.permission.DefaultRationale;
+import com.simon.safe.permission.PermissionSetting;
 import com.simon.safe.service.AddressService;
 import com.simon.safe.service.BlackNumberService;
 import com.simon.safe.service.RocketService;
+import com.simon.safe.service.WatchDogService;
 import com.simon.safe.utils.ConstantValue;
 import com.simon.safe.utils.ServiceUtil;
 import com.simon.safe.utils.SpUtil;
+import com.simon.safe.utils.ToastUtil;
 import com.simon.safe.view.SettingClickView;
 import com.simon.safe.view.SettingItemView;
+import com.yanzhenjie.permission.Action;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.Rationale;
+
+import java.util.List;
+
 
 public class SettingActivity extends BaseActivity {
 
@@ -34,45 +41,91 @@ public class SettingActivity extends BaseActivity {
     private SettingItemView siv_address;
     private SettingClickView mScvToastStyle;
     private SettingClickView mScvLocation;
+    private SettingItemView siv_blacknumber;
     private String[] mToastStyleDes;
     private int mToastStyle;
     private SettingItemView mSivRocket;
+    private Rationale mRationale;
+    private PermissionSetting mSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        mRationale = new DefaultRationale();
+        mSetting = new PermissionSetting(this);
         setTitle("设置中心");
         initUpdate();
         initRocket();
         initAddress();
         initToastStyle();
         initLocation();
-        initBlacknumber();
+        initBlackNumber();
+        initAppLock();
     }
-    /**
-     * 拦截黑名单短信电话
-     */
-    private void initBlacknumber() {
-        final SettingItemView siv_blacknumber = (SettingItemView) findViewById(R.id.siv_blacknumber);
-        boolean isRunning = ServiceUtil.isRunning(this, "com.simon.safe.service.BlackNumberService");
-        siv_blacknumber.setCheck(isRunning);
 
-        siv_blacknumber.setOnClickListener(new View.OnClickListener() {
+    /**
+     * 初始化程序锁方法
+     */
+    private void initAppLock() {
+        final SettingItemView siv_app_lock = (SettingItemView) findViewById(R.id.siv_app_lock);
+        boolean isRunning = ServiceUtil.isRunning(this, "com.simon.safe.service.WatchDogService");
+        siv_app_lock.setCheck(isRunning);
+
+        siv_app_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isCheck = siv_blacknumber.isCheck();
-                siv_blacknumber.setCheck(!isCheck);
+                boolean isCheck = siv_app_lock.isCheck();
+                siv_app_lock.setCheck(!isCheck);
                 if(!isCheck){
                     //开启服务
-                    startService(new Intent(getApplicationContext(), BlackNumberService.class));
+                    startService(new Intent(getApplicationContext(), WatchDogService.class));
                 }else{
                     //关闭服务
-                    stopService(new Intent(getApplicationContext(), BlackNumberService.class));
+                    stopService(new Intent(getApplicationContext(), WatchDogService.class));
                 }
             }
         });
     }
+    /**
+     * 拦截黑名单短信电话
+     */
+    private void initBlackNumber() {
+        siv_blacknumber = (SettingItemView) findViewById(R.id.siv_blacknumber);
+        boolean isRunning = ServiceUtil.isRunning(this, "com.simon.safe.service.BlackNumberService");
+        siv_blacknumber.setCheck(isRunning);
+
+        siv_blacknumber.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    isGranted = false;
+                    boolean isGranted = requestPermission(Permission.READ_CALL_LOG,
+                            Permission.WRITE_CALL_LOG,
+                            Permission.PROCESS_OUTGOING_CALLS);
+                    if (isGranted) {
+                        setBlackNumberData();
+                    }
+//                } else {
+//                    setBlackNumberData();
+//                }
+            }
+        });
+    }
+
+    private void setBlackNumberData() {
+        boolean isCheck = siv_blacknumber.isCheck();
+        siv_blacknumber.setCheck(!isCheck);
+        if (!isCheck) {
+            //开启服务
+            startService(new Intent(getApplicationContext(), BlackNumberService.class));
+        } else {
+            //关闭服务
+            stopService(new Intent(getApplicationContext(), BlackNumberService.class));
+        }
+    }
+
     private void initRocket() {
         mSivRocket = (SettingItemView) findViewById(R.id.siv_rocket);
         //对服务是否开的状态做显示
@@ -146,11 +199,6 @@ public class SettingActivity extends BaseActivity {
         builder.setIcon(R.drawable.ic_launcher);
         builder.setTitle("请选择归属地样式");
         //选择单个条目事件监听
-        /*
-         * 1:string类型的数组描述颜色文字数组
-         * 2:弹出对画框的时候的选中条目索引值
-         * 3:点击某一个条目后触发的点击事件
-         * */
         mToastStyle = SpUtil.getInt(this, ConstantValue.TOAST_STYLE, 0);
         builder.setSingleChoiceItems(mToastStyleDes, mToastStyle, new DialogInterface.OnClickListener() {
 
@@ -200,9 +248,7 @@ public class SettingActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                requestCallsPermission();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
                     // 检查是否有悬浮窗的权限
                     if (!Settings.canDrawOverlays(SettingActivity.this)) {
                         //没有权限，给出提示，并跳转界面然用户enable
@@ -290,39 +336,33 @@ public class SettingActivity extends BaseActivity {
         });
     }
 
-    private void requestCallsPermission() {
-        //判断当前Activity是否已经获得了该权限
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.PROCESS_OUTGOING_CALLS)
-                != PackageManager.PERMISSION_GRANTED) {
+    boolean isGranted = false;
 
-            //如果App的权限申请曾经被用户拒绝过，就需要在这里跟用户做出解释
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.PROCESS_OUTGOING_CALLS)) {
-                Toast.makeText(this, "please give me the permission", Toast.LENGTH_SHORT).show();
-            } else {
-                //进行权限请求
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.PROCESS_OUTGOING_CALLS,
-                                Manifest.permission.CALL_PHONE},
-                        RC_PROCESS_OUTGOING_CALLS);
-            }
-        }
-    }
+    private boolean requestPermission(String... permissions) {
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case RC_PROCESS_OUTGOING_CALLS: {
-                // 如果请求被拒绝，那么通常grantResults数组为空
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //申请成功，进行相应操作
-                } else {
-                    //申请失败，可以继续向用户解释。
-                }
-                return;
-            }
-        }
+        AndPermission.with(this)
+                .permission(permissions)
+                .rationale(mRationale)
+                .onGranted(new Action() {
+
+                    @Override
+                    public void onAction(List<String> permissions) {
+                        ToastUtil.show(getApplicationContext(), "授权成功");
+                        isGranted = true;
+                    }
+                })
+                .onDenied(new Action() {
+
+                    @Override
+                    public void onAction(@NonNull List<String> permissions) {
+                        isGranted = false;
+                        ToastUtil.show(getApplicationContext(), "授权失败");
+                        if (AndPermission.hasAlwaysDeniedPermission(SettingActivity.this, permissions)) {
+                            mSetting.showSetting(permissions);
+                        }
+                    }
+                })
+                .start();
+        return isGranted;
     }
 }

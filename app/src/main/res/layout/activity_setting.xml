@@ -57,4 +57,13 @@
         mobilesafe:desoff="黑名单拦截已关闭"
         mobilesafe:deson="黑名单拦截已开启">
     </com.simon.safe.view.SettingItemView>
+    <com.simon.safe.view.SettingItemView
+        xmlns:mobilesafe="http://schemas.android.com/apk/res/com.simon.safe"
+        android:id="@+id/siv_app_lock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        mobilesafe:destitle="程序锁设置"
+        mobilesafe:desoff="程序锁已关闭"
+        mobilesafe:deson="程序锁已开启">
+    </com.simon.safe.view.SettingItemView>
 </LinearLayout>

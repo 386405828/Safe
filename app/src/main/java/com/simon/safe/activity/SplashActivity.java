@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -106,8 +107,33 @@ public class SplashActivity extends BaseActivity {
         initData();
         //初始化动画
         initAnimation();
+//        if(!SpUtil.getBoolean(this, ConstantValue.HAS_SHORTCUT, false)){
+            //生成快捷方式
+            initShortCut();
+//        }
     }
-
+    /**
+     * 生成快捷方式
+     */
+    private void initShortCut() {
+        //1,给intent维护图标,名称
+        Intent intent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
+        //维护图标
+        intent.putExtra(Intent.EXTRA_SHORTCUT_ICON,
+                BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+        //名称
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "手机卫士");
+        //2,点击快捷方式后跳转到的activity
+        //2.1维护开启的意图对象
+        Intent shortCutIntent = new Intent("android.intent.action.HOME");
+        shortCutIntent.addCategory("android.intent.category.DEFAULT");
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortCutIntent);
+        //3,发送广播
+        sendBroadcast(intent);
+        //4,告知sp已经生成快捷方式
+        LogUtils.i(TAG,"initShortCut");
+        SpUtil.putBoolean(this, ConstantValue.HAS_SHORTCUT, true);
+    }
     private void initAnimation() {
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
         alphaAnimation.setDuration(3000);
